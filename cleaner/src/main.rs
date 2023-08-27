@@ -15,10 +15,22 @@ fn scan_system(){
                 let file_name_str = file_name.to_string_lossy();
 
                 let file_path = format!("/tmp/{}", file_name_str);
-                if let Err(err) = fs::remove_file(file_path) {
-                    eprintln!("Error removing file: {}", err);
-                } else {
-                    println!("File removed successfully");
+
+                match fs::metadata(&file_path) {
+                    Ok(metadata) => {
+                        if metadata.is_dir() {
+                            
+                        } else {
+                            if let Err(err) = fs::remove_file(&file_path) {
+                                eprintln!("Error removing file: {}", err);
+                            } else {
+                                println!("File removed successfully");
+                            }
+                        }
+                    }
+                    Err(_) => {
+                        println!("An error occurred while checking the path.");
+                    }
                 }
             }
         }
